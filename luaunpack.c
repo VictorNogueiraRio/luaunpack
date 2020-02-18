@@ -59,8 +59,23 @@ static int unpackint(lua_State *L) {
 	return 1;
 }
 
+static int unpackstring(lua_State *L) {
+	packet_t *packet;
+	unsigned int offset;
+	unsigned int size;
+
+	packet = verify_mem_access(L, &offset, &size);
+	if (packet == NULL)
+		return luaL_error(L, "trying to access out of bounds memory");
+
+	lua_pushlstring(L, packet->data + offset, size / 8);
+
+	return 1;
+}
+
 static const struct luaL_Reg unpack [] = {
-	{"unpackint", unpackint},
+	{"int", unpackint},
+	{"string", unpackstring},
 	{NULL,      NULL}
 };
 
