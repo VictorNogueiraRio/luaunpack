@@ -1,6 +1,11 @@
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+#include <linux/module.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <luaunpack.h>
+
+MODULE_LICENSE("Dual MIT/BSD");
+MODULE_DESCRIPTION("Library for bashic manipulation of memory areas in Lua");
 
 int lunpack_newpacket(lua_State *L, void *data, int length) {
 	packet_t *packet = lua_newuserdata(L, sizeof(packet_t));
@@ -15,11 +20,14 @@ int lunpack_newpacket(lua_State *L, void *data, int length) {
 	return 0;
 }
 
+EXPORT_SYMBOL(lunpack_newpacket);
+
 static packet_t *verify_mem_access(lua_State *L, unsigned int *offset, unsigned int *size) {
 	packet_t *packet = lua_touserdata(L, 1);
 
 	*offset = lua_tointeger(L, 2);
 	*size = lua_tointeger(L, 3);
+
 	if(packet->offset + *offset + *size > packet->length)
 		return NULL;
 
@@ -35,6 +43,7 @@ static int unpackint(lua_State *L) {
 	packet = verify_mem_access(L, &offset, &size);
 	if (packet == NULL)
 		return luaL_error(L, "trying to access out of bounds memory");
+
 
 	ptr = packet->data + offset;
 	switch (size) {

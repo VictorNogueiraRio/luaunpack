@@ -1,1 +1,1 @@
-obj-y += luaunpack.o
+obj-$(CONFIG_LUAUNPACK) += luaunpack.o
