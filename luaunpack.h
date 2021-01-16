@@ -1,8 +1,10 @@
+#include <lua.h>
+
 typedef struct {
-	size_t offset;
-	size_t length;
+	lua_Integer offset;
+	lua_Integer length;
 	void *data;
 } packet_t;
 
 extern int luaopen_unpack(lua_State *L);
-extern int lunpack_newpacket(lua_State *L, void *packet, int length);
+extern int lunpack_newpacket(lua_State *L, void *packet, lua_Integer length);

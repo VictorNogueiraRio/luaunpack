@@ -2,7 +2,7 @@
 #include <lauxlib.h>
 #include <luaunpack.h>
 
-int lunpack_newpacket(lua_State *L, void *data, int length) {
+int lunpack_newpacket(lua_State *L, void *data, lua_Integer length) {
 	packet_t *packet = lua_newuserdata(L, sizeof(packet_t));
 
 	if (packet == NULL)
@@ -15,7 +15,7 @@ int lunpack_newpacket(lua_State *L, void *data, int length) {
 	return 0;
 }
 
-static packet_t *verify_mem_access(lua_State *L, unsigned int *offset, unsigned int *size) {
+static packet_t *verify_mem_access(lua_State *L, lua_Integer *offset, lua_Integer *size) {
 	packet_t *packet = lua_touserdata(L, 1);
 
 	*offset = lua_tointeger(L, 2);
@@ -27,8 +27,8 @@ static packet_t *verify_mem_access(lua_State *L, unsigned int *offset, unsigned 
 }
 
 static int unpackint(lua_State *L) {
-	unsigned int offset;
-	unsigned int size;
+	lua_Integer offset;
+	lua_Integer size;
 	packet_t *packet;
 	unsigned char *ptr;
 
@@ -48,8 +48,8 @@ static int unpackint(lua_State *L) {
 
 static int unpackstring(lua_State *L) {
 	packet_t *packet;
-	unsigned int offset;
-	unsigned int size;
+	lua_Integer offset;
+	lua_Integer size;
 
 	packet = verify_mem_access(L, &offset, &size);
 	if (packet == NULL)
