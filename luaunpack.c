@@ -18,6 +18,9 @@ int lunpack_newpacket(lua_State *L, void *data, lua_Integer length) {
 static packet_t *verify_mem_access(lua_State *L, lua_Integer *offset, lua_Integer *size) {
 	packet_t *packet = lua_touserdata(L, 1);
 
+	if (packet == NULL)
+		return NULL;
+
 	*offset = lua_tointeger(L, 2);
 	*size = lua_tointeger(L, 3);
 	if(packet->offset + *offset + *size > packet->length)
