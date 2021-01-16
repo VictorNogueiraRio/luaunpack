@@ -6,7 +6,7 @@ int lunpack_newpacket(lua_State *L, void *data, lua_Integer length) {
 	packet_t *packet = lua_newuserdata(L, sizeof(packet_t));
 
 	if (packet == NULL)
-		return luaL_error(L, "not enough memory");
+		return -ENOMEM;
 
 	packet->offset = 0;
 	packet->length = length;
@@ -34,13 +34,13 @@ static int unpackint(lua_State *L) {
 
 	packet = verify_mem_access(L, &offset, &size);
 	if (packet == NULL)
-		return luaL_error(L, "trying to access out of bounds memory");
+		return 0;
 
 	ptr = packet->data + offset;
 	switch (size) {
 		case 1: lua_pushinteger(L, ptr[0]);        break;
 		case 2: lua_pushinteger(L, (ptr[0] << 8) | ptr[1]); break;
-		default: luaL_error(L, "invalid size");
+		default: return 0;
 	}
 
 	return 1;
@@ -53,7 +53,7 @@ static int unpackstring(lua_State *L) {
 
 	packet = verify_mem_access(L, &offset, &size);
 	if (packet == NULL)
-		return luaL_error(L, "trying to access out of bounds memory");
+		return 0;
 
 	lua_pushlstring(L, packet->data + offset, size);
 
