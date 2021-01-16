@@ -1,7 +1,6 @@
 #include <lua.h>
 
 typedef struct {
-	lua_Integer offset;
 	lua_Integer length;
 	void *data;
 } packet_t;
