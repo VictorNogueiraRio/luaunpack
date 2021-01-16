@@ -8,7 +8,6 @@ int lunpack_newpacket(lua_State *L, void *data, lua_Integer length) {
 	if (packet == NULL)
 		return -ENOMEM;
 
-	packet->offset = 0;
 	packet->length = length;
 	packet->data = data;
 
@@ -23,7 +22,7 @@ static packet_t *verify_mem_access(lua_State *L, lua_Integer *offset, lua_Intege
 
 	*offset = lua_tointeger(L, 2);
 	*size = lua_tointeger(L, 3);
-	if(packet->offset + *offset + *size > packet->length)
+	if(*offset + *size > packet->length)
 		return NULL;
 
 	return packet;
